@@ -18,9 +18,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-using var scope = app.Services.CreateScope();
-using var context = scope.ServiceProvider.GetService<ToDoContext>();
+// ensure database is created
+using var scope = app.Services.CreateAsyncScope();
+using var context = scope.ServiceProvider.GetRequiredService<ToDoContext>();
 await context.Database.EnsureCreatedAsync();
+
+await context.DisposeAsync();
+await scope.DisposeAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -30,9 +34,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

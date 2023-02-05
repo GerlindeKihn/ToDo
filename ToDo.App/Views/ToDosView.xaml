@@ -1,0 +1,33 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:ToDo.App.ViewModels"
+             xmlns:dto="clr-namespace:ToDo.Contracts.Dtos;assembly=ToDo.Contracts"
+             x:Class="ToDo.App.Views.ToDosView"
+             x:DataType="viewModel:ToDosViewModel"
+             Title="{Binding Title}">
+    <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                 Command="{Binding GetToDos}">
+        <CollectionView ItemsSource="{Binding ToDos}">
+            <CollectionView.Header>
+                <VerticalStackLayout>
+                    <Grid ColumnDefinitions="*,Auto" Padding="15">
+                        <Label Grid.Column="0" TextColor="#505151" FontFamily="Inter" FontSize="Medium" Text="Topic" />
+                        <Label Grid.Column="1" TextColor="#505151" FontFamily="Inter" FontSize="Medium" Text="Deadline" />
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="#C8C8C8" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="dto:ToDoDto">
+                    <VerticalStackLayout>
+                        <Grid ColumnDefinitions="*,Auto" Padding="15,30">
+                            <Label Grid.Column="0" FontFamily="Inter" FontSize="Medium" Text="{Binding Topic}" />
+                            <Label Grid.Column="1" FontFamily="Inter" FontSize="Medium" Text="{Binding Deadline, StringFormat='{0:ddd, dd.MM.yyyy}'}" />
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="#C8C8C8" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ToDo.Api.DataAccess;
 using ToDo.Api.DataAccess.Entities;
-using ToDo.Api.Dtos;
+using ToDo.Contracts.Dtos;
 
 namespace ToDo.Api.Controllers;
 
@@ -37,7 +37,7 @@ public class ToDoController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ToDoDto> Save(int id, SaveToDoDto dto)
+    public async Task<ToDoDto> Save(SaveToDoDto dto, int id)
     {
         ToDoEntity entity = await dbContext.Set<ToDoEntity>().SingleAsync(e => e.Id == id);
 
