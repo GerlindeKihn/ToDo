@@ -10,6 +10,8 @@ namespace ToDo.App
             InitializeComponent();
 
             MainPage = new AppShell();
+
+            Routing.RegisterRoute(nameof(EditingView), typeof(EditingView));
         }
     }
 }

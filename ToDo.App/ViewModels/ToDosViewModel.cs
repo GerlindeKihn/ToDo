@@ -1,6 +1,6 @@
-﻿
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using ToDo.App.Interfaces;
+using ToDo.App.Views;
 using ToDo.Contracts.Dtos;
 
 namespace ToDo.App.ViewModels
@@ -24,6 +24,8 @@ namespace ToDo.App.ViewModels
         public ObservableCollection<ToDoDto> ToDos { get; }
 
         public Command GetToDos { get; }
+        public Command AddToDo { get; }
+        public Command<ToDoDto> DeleteToDo { get; }
 
         public ToDosViewModel(IToDoApiClient apiClient)
         {
@@ -38,6 +40,17 @@ namespace ToDo.App.ViewModels
                 foreach (ToDoDto toDo in toDos) ToDos.Add(toDo);
 
                 IsRefreshing = false;
+            });
+
+            AddToDo = new(async () =>
+            {
+                await Shell.Current.GoToAsync(nameof(EditingView));
+            });
+
+            DeleteToDo = new(async dto =>  
+            {
+                await apiClient.Delete(dto.Id);
+                ToDos.Remove(dto);
             });
         }
     }

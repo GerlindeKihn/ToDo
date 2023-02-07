@@ -18,5 +18,5 @@ public interface IToDoApiClient
     Task<ToDoDto> Save([Body]SaveToDoDto dto, int id);
 
     [Delete("/ToDo/{id}")]
-    Task<ToDoDto> Delete(int id);
+    Task Delete(int id);
 }

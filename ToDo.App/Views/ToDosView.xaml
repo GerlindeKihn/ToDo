@@ -5,29 +5,40 @@
              x:Class="ToDo.App.Views.ToDosView"
              x:DataType="viewModel:ToDosViewModel"
              Title="{Binding Title}">
-    <RefreshView IsRefreshing="{Binding IsRefreshing}"
+    <AbsoluteLayout>
+        <RefreshView IsRefreshing="{Binding IsRefreshing}"
                  Command="{Binding GetToDos}">
         <CollectionView ItemsSource="{Binding ToDos}">
             <CollectionView.Header>
                 <VerticalStackLayout>
                     <Grid ColumnDefinitions="*,Auto" Padding="15">
-                        <Label Grid.Column="0" TextColor="#505151" FontFamily="Inter" FontSize="Medium" Text="Topic" />
-                        <Label Grid.Column="1" TextColor="#505151" FontFamily="Inter" FontSize="Medium" Text="Deadline" />
+                            <Label Grid.Column="0" TextColor="{StaticResource Gray200}" FontFamily="Inter" FontSize="Medium" Text="Task" />
+                            <Label Grid.Column="1" TextColor="{StaticResource Gray200}" FontFamily="Inter" FontSize="Medium" Text="Deadline" />
                     </Grid>
-                    <BoxView HeightRequest="1" Color="#C8C8C8" />
+                        <BoxView HeightRequest="1" Color="{StaticResource Gray100}" />
                 </VerticalStackLayout>
             </CollectionView.Header>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="dto:ToDoDto">
                     <VerticalStackLayout>
+                        <VerticalStackLayout.GestureRecognizers>
+                                <SwipeGestureRecognizer Direction="Left, Right" 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ToDosViewModel}}, Path=DeleteToDo}"
+                                                        CommandParameter="{Binding .}"/>
+                            </VerticalStackLayout.GestureRecognizers>
                         <Grid ColumnDefinitions="*,Auto" Padding="15,30">
                             <Label Grid.Column="0" FontFamily="Inter" FontSize="Medium" Text="{Binding Topic}" />
                             <Label Grid.Column="1" FontFamily="Inter" FontSize="Medium" Text="{Binding Deadline, StringFormat='{0:ddd, dd.MM.yyyy}'}" />
                         </Grid>
-                        <BoxView HeightRequest="1" Color="#C8C8C8" />
+                        <BoxView HeightRequest="1" Color="{StaticResource Gray100}" />
                     </VerticalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </RefreshView>
+        </RefreshView>
+        <ImageButton Source="plus.svg" 
+                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                     AbsoluteLayout.LayoutBounds=".95,.95,75,75" 
+                     Command="{Binding AddToDo}"/>
+    </AbsoluteLayout>
 </ContentPage>

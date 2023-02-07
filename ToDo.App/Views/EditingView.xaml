@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:ToDo.App.ViewModels"
+             xmlns:dto="clr-namespace:ToDo.Contracts.Dtos;assembly=ToDo.Contracts"
+             x:Class="ToDo.App.Views.EditingView"
+             x:DataType="viewModel:EditingViewModel"
+             Title="{Binding Title}">
+
+    <AbsoluteLayout>
+        <VerticalStackLayout AbsoluteLayout.LayoutFlags="SizeProportional" AbsoluteLayout.LayoutBounds="0,0,1,1">
+            <Label Text="Task" FontFamily="Inter" FontSize="Medium" TextColor="{StaticResource Gray200}" Padding="10, 40, 10, 5"/>
+            <Frame Margin="10,5" Padding="8" BorderColor="{StaticResource Gray100}">
+                <Entry FontFamily="Inter"
+                       FontSize="Large"
+                       Text="{Binding Topic, Mode=TwoWay}"/>
+            </Frame>
+            <Label Text="Deadline" FontFamily="Inter" FontSize="Medium" TextColor="{StaticResource Gray200}" Padding="10, 40, 10, 5"/>
+            <Frame Margin="10,5" Padding="8" BorderColor="{StaticResource Gray100}">
+                <Grid ColumnDefinitions="*, Auto">
+                    <DatePicker Date="{Binding Deadline, Mode=TwoWay}" 
+                                Format="ddd, dd.MM.yyyy"
+                                FontFamily="Inter"
+                                FontSize="Large"
+                                Grid.Column="0"/>
+                    <Image Source="calendar.png"
+                           Grid.Column="1"
+                           HeightRequest="30"
+                           WidthRequest="30"
+                           Margin="10"/>
+                </Grid>
+            </Frame>
+            <Label Text="Assignee" FontFamily="Inter" FontSize="Medium" TextColor="{StaticResource Gray200}" Padding="10, 40, 10, 5"/>
+            <Frame Margin="10,5" Padding="8" BorderColor="{StaticResource Gray100}">
+                <Entry FontFamily="Inter"
+                       FontSize="Large"
+                       />
+            </Frame>
+        </VerticalStackLayout>
+        <ImageButton Source="filledcheckmark.svg" 
+                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                     AbsoluteLayout.LayoutBounds=".95,.95,75,75"
+                     Command="{Binding SaveNewTask}"/>
+    </AbsoluteLayout>
+
+
+
+</ContentPage>
