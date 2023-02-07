@@ -14,20 +14,42 @@ namespace ToDo.App.ViewModels
             set { SetProperty(ref title, value); }
         }
 
-        public Command SaveNewTask { get; }
+        public Command SaveTask { get; }
 
-        public EditingViewModel(IToDoApiClient apiClient)
+        public EditingViewModel(IToDoApiClient apiClient, ObservableCollection<ToDoDto> toDos, IToDoHolder toDoHolder)
         {
-            title = "Create Task";
-
-            SaveNewTask = new(async () =>
+            if (toDoHolder.SelectedToDo is null)
             {
-                SaveToDoDto dto = new(Topic, Deadline);
-                await apiClient.Save(dto);
+                title = "Create Task";
 
-                await Shell.Current.GoToAsync("..");
+                SaveTask = new(async () =>
+                {
+                    SaveToDoDto dto = new(Topic, Deadline);
+                    ToDoDto toDo = await apiClient.Save(dto);
 
-            });
+                    toDos.Add(toDo);
+
+                    await Shell.Current.GoToAsync("..");
+                });
+            }
+            else
+            {
+                title = "Edit Task";
+                topic = toDoHolder.SelectedToDo.Topic;
+                deadline = toDoHolder.SelectedToDo.Deadline;
+
+                SaveTask = new(async () =>
+                {
+                    SaveToDoDto dto = new(Topic, Deadline);
+                    ToDoDto toDo = await apiClient.Save(dto, toDoHolder.SelectedToDo.Id);
+
+                    int index = toDos.IndexOf(toDoHolder.SelectedToDo);
+                    toDos.RemoveAt(index);
+                    toDos.Insert(index, toDo);
+
+                    await Shell.Current.GoToAsync("..");
+                });
+            }
         }
 
         private string topic;

@@ -40,9 +40,6 @@
         <ImageButton Source="filledcheckmark.svg" 
                      AbsoluteLayout.LayoutFlags="PositionProportional"
                      AbsoluteLayout.LayoutBounds=".95,.95,75,75"
-                     Command="{Binding SaveNewTask}"/>
+                     Command="{Binding SaveTask}"/>
     </AbsoluteLayout>
-
-
-
 </ContentPage>

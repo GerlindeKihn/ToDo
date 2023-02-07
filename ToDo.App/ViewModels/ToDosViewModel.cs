@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using ToDo.App.Helpers;
 using ToDo.App.Interfaces;
 using ToDo.App.Views;
 using ToDo.Contracts.Dtos;
@@ -26,11 +27,12 @@ namespace ToDo.App.ViewModels
         public Command GetToDos { get; }
         public Command AddToDo { get; }
         public Command<ToDoDto> DeleteToDo { get; }
+        public Command<ToDoDto> EditToDo { get; }
 
-        public ToDosViewModel(IToDoApiClient apiClient)
+        public ToDosViewModel(IToDoApiClient apiClient, ObservableCollection<ToDoDto> toDos, IToDoHolder toDoHolder)
         {
             title = "To Do's";
-            ToDos = new ();
+            ToDos = toDos;
 
             GetToDos = new(async () =>
             {
@@ -44,6 +46,7 @@ namespace ToDo.App.ViewModels
 
             AddToDo = new(async () =>
             {
+                toDoHolder.SelectedToDo = null;
                 await Shell.Current.GoToAsync(nameof(EditingView));
             });
 
@@ -51,6 +54,12 @@ namespace ToDo.App.ViewModels
             {
                 await apiClient.Delete(dto.Id);
                 ToDos.Remove(dto);
+            });
+
+            EditToDo = new(async dto =>
+            {
+                toDoHolder.SelectedToDo = dto;
+                await Shell.Current.GoToAsync(nameof(EditingView));
             });
         }
     }

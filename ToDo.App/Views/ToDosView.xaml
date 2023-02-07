@@ -5,10 +5,12 @@
              x:Class="ToDo.App.Views.ToDosView"
              x:DataType="viewModel:ToDosViewModel"
              Title="{Binding Title}">
+    
     <AbsoluteLayout>
-        <RefreshView IsRefreshing="{Binding IsRefreshing}"
-                 Command="{Binding GetToDos}">
-        <CollectionView ItemsSource="{Binding ToDos}">
+        <ScrollView>
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding GetToDos}">
+        <CollectionView ItemsSource="{Binding ToDos}" >
             <CollectionView.Header>
                 <VerticalStackLayout>
                     <Grid ColumnDefinitions="*,Auto" Padding="15">
@@ -22,10 +24,13 @@
                 <DataTemplate x:DataType="dto:ToDoDto">
                     <VerticalStackLayout>
                         <VerticalStackLayout.GestureRecognizers>
-                                <SwipeGestureRecognizer Direction="Left, Right" 
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ToDosViewModel}}, Path=DeleteToDo}"
-                                                        CommandParameter="{Binding .}"/>
-                            </VerticalStackLayout.GestureRecognizers>
+                            <SwipeGestureRecognizer Direction="Left, Right" 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ToDosViewModel}}, Path=DeleteToDo}"
+                                                    CommandParameter="{Binding .}"/>
+                            <TapGestureRecognizer  
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ToDosViewModel}}, Path=EditToDo}"
+                                                    CommandParameter="{Binding .}"/>
+                        </VerticalStackLayout.GestureRecognizers>
                         <Grid ColumnDefinitions="*,Auto" Padding="15,30">
                             <Label Grid.Column="0" FontFamily="Inter" FontSize="Medium" Text="{Binding Topic}" />
                             <Label Grid.Column="1" FontFamily="Inter" FontSize="Medium" Text="{Binding Deadline, StringFormat='{0:ddd, dd.MM.yyyy}'}" />
@@ -35,10 +40,11 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        </RefreshView>
-        <ImageButton Source="plus.svg" 
-                     AbsoluteLayout.LayoutFlags="PositionProportional"
-                     AbsoluteLayout.LayoutBounds=".95,.95,75,75" 
-                     Command="{Binding AddToDo}"/>
+            </RefreshView>
+        </ScrollView>
+            <ImageButton Source="plus.svg" 
+                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                         AbsoluteLayout.LayoutBounds=".95,.95,75,75" 
+                         Command="{Binding AddToDo}"/>
     </AbsoluteLayout>
 </ContentPage>

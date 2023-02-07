@@ -2,10 +2,12 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 using Refit;
+using System.Collections.ObjectModel;
 using ToDo.App.Helpers;
 using ToDo.App.Interfaces;
 using ToDo.App.ViewModels;
 using ToDo.App.Views;
+using ToDo.Contracts.Dtos;
 
 namespace ToDo.App
 {
@@ -46,12 +48,16 @@ namespace ToDo.App
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://10.0.2.2:7079"))
                 .ConfigurePrimaryHttpMessageHandler<SkipCertifacteCheckHandler>();
 
-            builder.Services.AddTransient<ToDosView>();
-            builder.Services.AddTransient<ToDosViewModel>();
+            builder.Services.AddScoped<ToDosView>();
+            builder.Services.AddScoped<ToDosViewModel>();
 
             builder.Services.AddTransient<EditingView>();
             builder.Services.AddTransient<EditingViewModel>();
-            
+
+            builder.Services.AddScoped<ObservableCollection<ToDoDto>>();
+
+            builder.Services.AddScoped<IToDoHolder, ToDoHolder>();
+
             return builder.Build();
         }
     }
