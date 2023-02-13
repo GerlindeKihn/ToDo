@@ -12,7 +12,7 @@ internal class AuthenticationHandler : DelegatingHandler
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        var authHeader = await secureStorage.GetAsync("AuthHeader");
+        string authHeader = await secureStorage.GetAsync("AuthHeader");
 
         if (authHeader is not null)
             request.Headers.Authorization = new("Basic", authHeader);

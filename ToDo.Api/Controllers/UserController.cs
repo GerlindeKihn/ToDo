@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToDo.Api.DataAccess;
 using ToDo.Api.DataAccess.Entities;
@@ -27,15 +26,4 @@ public class UserController : ControllerBase
             .Where(e => e.Id == CurrentUser.Id)
             .Select(e => new UserDto(e.Id, e.Username))
             .SingleAsync();
-
-    [HttpPost, AllowAnonymous]
-    public async Task<UserDto> Create(CreateUserDto dto)
-    {
-        UserEntity entity = new() { Username = dto.Username, Password = dto.Password };
-       
-        await dbContext.Set<UserEntity>().AddAsync(entity);
-        await dbContext.SaveChangesAsync();
-
-        return new(entity.Id, entity.Username);
-    }
 }

@@ -10,7 +10,4 @@ public interface IUserApiClient
 
     [Get("/User/Current")]
     Task<UserDto> GetCurrent();
-
-    [Post("/User")]
-    Task<UserDto> Create([Body]CreateUserDto dto);
 }

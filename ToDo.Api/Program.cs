@@ -1,12 +1,9 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using ToDo.Api.Authentication;
 using ToDo.Api.DataAccess;
+using ToDo.Api.Services;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ToDoContext>((services, options) =>
@@ -15,21 +12,12 @@ builder.Services.AddDbContext<ToDoContext>((services, options) =>
             .GetRequiredService<IConfiguration>()
             .GetConnectionString("ToDo")));
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(SwaggerOptions.SetupBasicAuthorization);
+builder.Services.AddHostedService<DatabaseCreationService>();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-// ensure database is created
-using var scope = app.Services.CreateAsyncScope();
-using var context = scope.ServiceProvider.GetRequiredService<ToDoContext>();
-await context.Database.EnsureCreatedAsync();
-
-await context.DisposeAsync();
-await scope.DisposeAsync();
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -15,7 +15,7 @@ public class LoginViewModel : BaseViewModel
 
         Login = new(async () =>
         {
-            if (!ShouldBeEnabled) return;
+            if (LoginDisabled) return;
 
             try
             {
@@ -34,7 +34,7 @@ public class LoginViewModel : BaseViewModel
 
     public async Task OnAppearing()
     {
-        var authHeader = await secureStorage.GetAsync("AuthHeader");
+        string authHeader = await secureStorage.GetAsync("AuthHeader");
         if (authHeader is null) return;
 
         Application.Current!.MainPage = new AppShell();
@@ -64,9 +64,9 @@ public class LoginViewModel : BaseViewModel
     private string AuthHeader => Convert.ToBase64String(
         Encoding.UTF8.GetBytes(username + ':' + password));
 
-    private bool ShouldBeEnabled =>
-        !string.IsNullOrEmpty(username) &&
-        !string.IsNullOrEmpty(password);
+    private bool LoginDisabled =>
+        string.IsNullOrEmpty(username) ||
+        string.IsNullOrEmpty(password);
 
     public Command Login { get; }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Runtime.CompilerServices;
 using ToDo.Api.DataAccess.Entities;
 
 namespace ToDo.Api.DataAccess.Configurations
