@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 using Refit;
 using System.Collections.ObjectModel;
+using System.Net.Http.Headers;
+using System.Text;
 using ToDo.App.Helpers;
 using ToDo.App.Interfaces;
 using ToDo.App.ViewModels;
@@ -15,22 +17,8 @@ namespace ToDo.App
     {
         public static MauiApp CreateMauiApp()
         {
-            Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (h, v) =>
-            {
-                h.PlatformView.BackgroundTintList =
-                    Android.Content.Res.ColorStateList.ValueOf(Colors.Transparent.ToAndroid());
-            });
-
-            Microsoft.Maui.Handlers.DatePickerHandler.Mapper.AppendToMapping("NoUnderline", (h, v) =>
-            {
-                h.PlatformView.BackgroundTintList =
-                    Android.Content.Res.ColorStateList.ValueOf(Colors.Transparent.ToAndroid());
-            });
-
-
-
-            var builder = MauiApp.CreateBuilder();
-            builder
+            var builder = MauiApp
+                .CreateBuilder()
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {
@@ -38,15 +26,17 @@ namespace ToDo.App
                     fonts.AddFont("OpenSans-Semibold.ttf", "Inter");
                 });
 
-#if DEBUG
-		builder.Logging.AddDebug();
-#endif
+            #if DEBUG
+		    builder.Logging.AddDebug();
+            #endif
 
+            builder.Services.AddScoped<AuthenticationHandler>();
             builder.Services.AddSingleton<SkipCertifacteCheckHandler>();
-            builder.Services
-                .AddRefitClient<IToDoApiClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://10.0.2.2:7079"))
-                .ConfigurePrimaryHttpMessageHandler<SkipCertifacteCheckHandler>();
+            builder.Services.AddApiClient<IToDoApiClient>();
+            builder.Services.AddApiClient<IUserApiClient>();
+
+            builder.Services.AddScoped<LoginView>();
+            builder.Services.AddScoped<LoginViewModel>();
 
             builder.Services.AddScoped<ToDosView>();
             builder.Services.AddScoped<ToDosViewModel>();
@@ -55,10 +45,17 @@ namespace ToDo.App
             builder.Services.AddTransient<EditingViewModel>();
 
             builder.Services.AddScoped<ObservableCollection<ToDoDto>>();
-
             builder.Services.AddScoped<IToDoHolder, ToDoHolder>();
+            builder.Services.AddSingleton(SecureStorage.Default);
 
             return builder.Build();
         }
+
+        private static void AddApiClient<TClient>(this IServiceCollection serviceCollection)
+            where TClient : class =>
+            serviceCollection.AddRefitClient<TClient>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://10.0.2.2:7079"))
+                .AddHttpMessageHandler<AuthenticationHandler>()
+                .ConfigurePrimaryHttpMessageHandler<SkipCertifacteCheckHandler>();
     }
 }

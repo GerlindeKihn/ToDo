@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using ToDo.Api.Authentication;
 using ToDo.Api.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +17,7 @@ builder.Services.AddDbContext<ToDoContext>((services, options) =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(SwaggerOptions.SetupBasicAuthorization);
 
 var app = builder.Build();
 
@@ -34,7 +37,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseMiddleware<BasicAuthenticationMiddleware>();
 app.MapControllers();
 
 app.Run();

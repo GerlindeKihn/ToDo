@@ -26,6 +26,9 @@
     <MauiXaml Update="Views\EditingView.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
+    <MauiXaml Update="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
     <MauiXaml Update="Views\ToDosView.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>

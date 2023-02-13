@@ -9,26 +9,35 @@ namespace ToDo.Api.Controllers;
 public class ToDoController : ControllerBase
 {
     private readonly ToDoContext dbContext;
-
+    
     public ToDoController(ToDoContext dbContext) => this.dbContext = dbContext;
+
+    private IQueryable<ToDoEntity> ToDos => dbContext
+        .Set<ToDoEntity>()
+        .Where(e => e.UserId == CurrentUser.Id);
+
 
     [HttpGet]
     public async Task<IReadOnlyCollection<ToDoDto>> Get() =>
-        await dbContext.Set<ToDoEntity>()
+        await ToDos
             .Select(e => new ToDoDto(e.Id, e.Topic, e.Deadline))
             .ToListAsync();
 
     [HttpGet("{id}")]
     public async Task<ToDoDto> Get(int id) =>
-        await dbContext.Set<ToDoEntity>()
-            .Where(e => e.Id == id)
+        await ToDos
             .Select(e => new ToDoDto(e.Id, e.Topic, e.Deadline))
-            .SingleAsync();
+            .SingleAsync(e => e.Id == id);
 
     [HttpPost]
     public async Task<ToDoDto> Save(SaveToDoDto dto)
     {
-        ToDoEntity entity = new() { Topic = dto.Topic, Deadline = dto.Deadline };
+        ToDoEntity entity = new()
+        {
+            Topic = dto.Topic,
+            Deadline = dto.Deadline,
+            UserId = dto.Assignee ?? CurrentUser.Id
+        };
 
         await dbContext.Set<ToDoEntity>().AddAsync(entity);
         await dbContext.SaveChangesAsync();
@@ -39,10 +48,11 @@ public class ToDoController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ToDoDto> Save(SaveToDoDto dto, int id)
     {
-        ToDoEntity entity = await dbContext.Set<ToDoEntity>().SingleAsync(e => e.Id == id);
+        ToDoEntity entity = await ToDos.SingleAsync(e => e.Id == id);
 
         entity.Topic = dto.Topic;
         entity.Deadline = dto.Deadline;
+        entity.UserId = dto.Assignee ?? CurrentUser.Id;
 
         await dbContext.SaveChangesAsync();
 
@@ -52,7 +62,7 @@ public class ToDoController : ControllerBase
     [HttpDelete("{id}")]
     public async Task Delete(int id)
     {
-        ToDoEntity entity = await dbContext.Set<ToDoEntity>().SingleAsync(e => e.Id == id);
+        ToDoEntity entity = await ToDos.SingleAsync(e => e.Id == id);
         
         dbContext.Set<ToDoEntity>().Remove(entity);
         await dbContext.SaveChangesAsync();

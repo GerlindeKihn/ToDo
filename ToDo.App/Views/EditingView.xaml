@@ -32,9 +32,12 @@
             </Frame>
             <Label Text="Assignee" FontFamily="Inter" FontSize="Medium" TextColor="{StaticResource Gray200}" Padding="10, 40, 10, 5"/>
             <Frame Margin="10,5" Padding="8" BorderColor="{StaticResource Gray100}">
-                <Entry FontFamily="Inter"
-                       FontSize="Large"
-                       />
+                <Picker Title="Select an assignee"
+                        FontFamily="Inter"
+                        FontSize="Large"
+                        ItemsSource="{Binding Users}"
+                        ItemDisplayBinding="{Binding UserName}"
+                        SelectedItem="{Binding Assignee}"/>
             </Frame>
         </VerticalStackLayout>
         <ImageButton Source="filledcheckmark.svg" 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using ToDo.App.Helpers;
 using ToDo.App.Interfaces;
 using ToDo.App.Views;
 using ToDo.Contracts.Dtos;
