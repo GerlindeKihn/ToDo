@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:ToDo.App.ViewModels"
              x:Class="ToDo.App.Views.LoginView"
              x:DataType="viewModel:LoginViewModel"
              BackgroundColor="#2DBBC5">
+
     <Grid RowDefinitions="100, 30, Auto, *">
         <Label Grid.Row="1"
                TextColor="Red"

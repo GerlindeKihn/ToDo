@@ -7,9 +7,7 @@ public class LoginViewModel : BaseViewModel
 {
     private readonly ISecureStorage secureStorage;
 
-    public LoginViewModel(
-        ISecureStorage secureStorage,
-        IUserApiClient userApiClient)
+    public LoginViewModel(ISecureStorage secureStorage, IUserApiClient userApiClient)
     {
         this.secureStorage = secureStorage;
 

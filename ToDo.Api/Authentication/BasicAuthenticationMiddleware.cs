@@ -17,13 +17,13 @@ public class BasicAuthenticationMiddleware
     {
         try
         {
-            var authHeader = httpContext.Request.Headers["Authorization"];
-            var authHeaderValue = AuthenticationHeaderValue.Parse(authHeader);
-            var authHeaderBytes = Convert.FromBase64String(authHeaderValue.Parameter!);
-            var credentials = Encoding.UTF8.GetString(authHeaderBytes).Split(':');
-            var dbContext = httpContext.RequestServices.GetRequiredService<ToDoContext>();
+            string authHeader = httpContext.Request.Headers["Authorization"];
+            AuthenticationHeaderValue authHeaderValue = AuthenticationHeaderValue.Parse(authHeader);
+            byte[] authHeaderBytes = Convert.FromBase64String(authHeaderValue.Parameter!);
+            string[] credentials = Encoding.UTF8.GetString(authHeaderBytes).Split(':');
+            ToDoContext dbContext = httpContext.RequestServices.GetRequiredService<ToDoContext>();
 
-            var user = await dbContext
+            UserEntity user = await dbContext
                 .Set<UserEntity>()
                 .SingleOrDefaultAsync(e => e.Username == credentials[0]);
 

@@ -17,7 +17,7 @@ namespace ToDo.App
     {
         public static MauiApp CreateMauiApp()
         {
-            var builder = MauiApp
+            MauiAppBuilder builder = MauiApp
                 .CreateBuilder()
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
